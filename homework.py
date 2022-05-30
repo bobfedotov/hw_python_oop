@@ -5,21 +5,22 @@ from typing import Type
 @dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
+
     training_type: str
     duration: float
     distance: float
     speed: float
     calories: float
 
-    INFOTEXT_CONSTANT: str = ('Тип тренировки: {training_type}; '
-                              'Длительность: {duration:.3f} ч.; '
-                              'Дистанция: {distance:.3f} км; '
-                              'Ср. скорость: {speed:.3f} км/ч; '
-                              'Потрачено ккал: {calories:.3f}.')
+    INFO_TEXT_CONSTANT: str = ('Тип тренировки: {training_type}; '
+                               'Длительность: {duration:.3f} ч.; '
+                               'Дистанция: {distance:.3f} км; '
+                               'Ср. скорость: {speed:.3f} км/ч; '
+                               'Потрачено ккал: {calories:.3f}.')
 
     def get_message(self) -> str:
         """Финальный вывод информации на экран."""
-        return self.INFOTEXT_CONSTANT.format(**asdict(self))
+        return self.INFO_TEXT_CONSTANT.format(**asdict(self))
 
 
 class Training:
@@ -133,10 +134,9 @@ def read_package(workout_type: str, data: list) -> Training:
     training_class_dict: dict[str, Type[Training]] = {'SWM': Swimming,
                                                       'RUN': Running,
                                                       'WLK': SportsWalking}
-    if workout_type in training_class_dict:
-        return training_class_dict[workout_type](*data)
-    else:
-        raise ValueError("Неизвестный код тренировки")
+    if workout_type not in training_class_dict:
+        raise ValueError('Неизвестный код тренировки')
+    return training_class_dict[workout_type](*data)
 
 
 def main(training: Training) -> None:
